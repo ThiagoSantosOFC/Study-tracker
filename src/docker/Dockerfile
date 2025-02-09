@@ -1,20 +1,26 @@
-FROM alpine:3 as downloader
+# Etapa 1: Imagem base Python
+FROM python:3.10-slim AS base
 
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
-ARG VERSION
+# Etapa 2: Definir diretório de trabalho
+WORKDIR /app
 
-ENV BUILDX_ARCH="${TARGETOS:-linux}_${TARGETARCH:-amd64}${TARGETVARIANT}"
+# Etapa 3: Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${VERSION}/pocketbase_${VERSION}_${BUILDX_ARCH}.zip \
-    && unzip pocketbase_${VERSION}_${BUILDX_ARCH}.zip \
-    && chmod +x /pocketbase
+# Etapa 4: Instalar dependências do projeto
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-FROM alpine:3
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+# Etapa 5: Copiar código do projeto
+COPY . .
 
-EXPOSE 8090
+# Etapa 6: Configurar variável de ambiente para FastAPI (opcional)
+ENV UVICORN_CMD="uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
 
-COPY --from=downloader /pocketbase /usr/local/bin/pocketbase
-ENTRYPOINT ["/usr/local/bin/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/pb_data", "--publicDir=/pb_public", "--hooksDir=/pb_hooks"]
+# Etapa 7: Expor a porta do FastAPI
+EXPOSE 8000
+
+# Etapa 8: Rodar o servidor FastAPI
+CMD ["sh", "-c", "$UVICORN_CMD"]

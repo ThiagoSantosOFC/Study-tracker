@@ -1,23 +1,35 @@
-version: "3.7"
+version: '3.8'
+
 services:
-  pocketbase:
-    image: ghcr.io/muchobien/pocketbase:latest
-    container_name: pocketbase
-    restart: unless-stopped
-    command:
-      - --encryptionEnv  # opcional
-      - ENCRYPTION  # opcional
+  backend:
+    build: ./backend
+    container_name: study_tracker_backend
     environment:
-      ENCRYPTION: 4fcc5ed5abd19f5d0b0a81955ee88c5e # opcional
+      - DATABASE_URL=postgresql://user:password@db:5432/study_tracker_db
     ports:
-      - "8090:8090"
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - study_tracker_network
+
+  db:
+    image: postgres:latest
+    container_name: study_tracker_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: study_tracker_db
+    ports:
+      - "5432:5432"
     volumes:
-      - ./pocketbase_data:/pb_data
-      - ./pocketbase_public:/pb_public  # opcional
-      - ./pocketbase_hooks:/pb_hooks  # opcional
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - study_tracker_network
+
+volumes:
+  postgres_data:
+
+networks:
+  study_tracker_network:
+    driver: bridge
