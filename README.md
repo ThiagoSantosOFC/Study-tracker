@@ -1,4 +1,4 @@
-# 📖 Study Tracker with GUI (WIP)
+# 📖 Study Tracker BACKEND (WIP)
 
 ## 📝 Description
 Study Tracker is an application designed to help you monitor the time spent on different subjects or projects, with features to enhance productivity and organization.
