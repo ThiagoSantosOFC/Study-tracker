@@ -29,26 +29,6 @@ Study Tracker is an application designed to help you monitor the time spent on d
 - 🎨 Choose themes (🌞 light/🌙 dark mode).
 - ⏲️ Enable reminders for regular breaks (e.g., 👀 20/20/20 eye rest technique).
 
-## 🛠️ Technologies
-
-- **🖥️ GUI**: Tkinter (simple and built-in Python).
-- **🗄️ Database**: PocketBase for storing sessions, subjects, and notes.
-- **📊 Charts**: Matplotlib or Plotly for data visualization.
-- **🔔 Notifications**: Plyer library for system alerts.
-
-## 📁 Project Structure
-The project follows a modular structure to ensure best practices:
-
-```
-📂 study-tracker
-│── 🏁 main.py        # Initializes the application
-│── ⏳ timer.py       # Manages the Pomodoro timer
-│── 🗄️ database.py    # Handles SQLite database operations
-│── 🎨 gui.py         # Sets up the graphical user interface
-│── 📊 charts.py      # Generates charts with Matplotlib or Plotly
-```
-
-
 ## 🤝 Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.
 
