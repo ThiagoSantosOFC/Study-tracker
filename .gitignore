@@ -3,3 +3,5 @@
 /src/pocketbase_hooks
 /src/pocketbase_public
 /src/docker/pocketbase_data
+/src/backend/database/__pycache__
+*.pyc
