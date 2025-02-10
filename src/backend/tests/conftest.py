@@ -45,3 +45,8 @@ def session_service(db_session):
 def task_service(db_session):
     from services.task_service import TaskService
     return TaskService(db_session)
+
+@pytest.fixture
+def notification_service(db_session):
+    from services.notification_service import NotificationService
+    return NotificationService(db_session)
