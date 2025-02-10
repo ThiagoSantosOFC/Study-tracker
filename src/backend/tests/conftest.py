@@ -35,3 +35,8 @@ def db_session(engine):
 def user_service(db_session):
     from services.user_service import UserService
     return UserService(db_session)
+
+@pytest.fixture
+def session_service(db_session):
+    from services.session_service import SessionService
+    return SessionService(db_session)
