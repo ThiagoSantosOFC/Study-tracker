@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from database.session import Base
+from database.connection import Base
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "users"
@@ -13,7 +14,8 @@ class User(Base):
     role = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
-
+    is_active = Column(Boolean, default=True)
+    
     sessions = relationship("Session", back_populates="created_by_user")
     user_sessions = relationship("UserSession", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
