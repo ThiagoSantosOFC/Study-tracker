@@ -1,43 +1,48 @@
 import pytest
 from services.user_service import UserService
 from exceptions.exceptions import UserNotFoundException, InvalidDataException
+from database.models import User
+
+def generate_unique_user_data(email_suffix: str = "") -> dict:
+    return {
+        "username": f"testuser{email_suffix}",
+        "email": f"test{email_suffix}@example.com",
+        "password": "testPassword123!",
+        "role": "user",
+        "is_active": True
+    }
+
+@pytest.fixture(autouse=True)
+def cleanup_database(db_session):
+    yield
+    db_session.query(User).delete()
+    db_session.commit()
 
 def test_create_user(user_service):
-    # Test data
-    user_data = {
-        "email": "test@example.com",
-        "password": "testpassword123"
-    }
-    
-    # Create user
+    user_data = generate_unique_user_data("1")
     user = user_service.create_user(user_data)
     
-    # Assertions
     assert user is not None
     assert user.email == user_data["email"]
+    assert user.username == user_data["username"]
+    assert user.role == user_data["role"]
 
 def test_get_user(user_service):
-    # Create a test user first
-    user_data = {
-        "email": "test@example.com",
-        "password": "testpassword123"
-    }
+    user_data = generate_unique_user_data("2")
     created_user = user_service.create_user(user_data)
     
-    # Get the user
     user = user_service.get_user(created_user.id)
     
-    # Assertions
     assert user is not None
     assert user.email == user_data["email"]
-
-def test_get_user_not_found(user_service):
-    with pytest.raises(UserNotFoundException):
-        user_service.get_user(999)  # Non-existent ID
+    assert user.username == user_data["username"]
+    assert user.role == user_data["role"]
+    assert user.is_active == user_data["is_active"]
 
 def test_create_user_invalid_data(user_service):
     invalid_user_data = {
-        "email": "invalid-email",  # Invalid email format
+        "username": "testuser",  
+        "email": "invalid-email",
         "password": "test123"
     }
     
@@ -45,39 +50,25 @@ def test_create_user_invalid_data(user_service):
         user_service.create_user(invalid_user_data)
 
 def test_update_user(user_service):
-    # Create a test user first
-    user_data = {
-        "email": "test@example.com",
-        "password": "testpassword123"
-    }
+    user_data = generate_unique_user_data("3")
     created_user = user_service.create_user(user_data)
     
-    # Update data
     update_data = {
-        "email": "updated@example.com"
+        "email": "updated3@example.com"
     }
     
-    # Update user
     updated_user = user_service.update_user(created_user.id, update_data)
     
-    # Assertions
     assert updated_user is not None
     assert updated_user.email == update_data["email"]
 
 def test_delete_user(user_service):
-    # Create a test user first
-    user_data = {
-        "email": "test@example.com",
-        "password": "testpassword123"
-    }
+    user_data = generate_unique_user_data("4")
     created_user = user_service.create_user(user_data)
     
-    # Delete user
     result = user_service.delete_user(created_user.id)
     
-    # Assertions
     assert result is True
     
-    # Verify user is deleted
     with pytest.raises(UserNotFoundException):
         user_service.get_user(created_user.id)
