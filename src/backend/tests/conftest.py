@@ -40,3 +40,8 @@ def user_service(db_session):
 def session_service(db_session):
     from services.session_service import SessionService
     return SessionService(db_session)
+
+@pytest.fixture
+def task_service(db_session):
+    from services.task_service import TaskService
+    return TaskService(db_session)

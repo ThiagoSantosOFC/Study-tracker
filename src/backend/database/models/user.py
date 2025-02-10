@@ -18,4 +18,5 @@ class User(Base):
     
     sessions = relationship("Session", back_populates="created_by_user")
     user_sessions = relationship("UserSession", back_populates="user")
+    tasks = relationship("Task", back_populates="created_by")
     notifications = relationship("Notification", back_populates="user")

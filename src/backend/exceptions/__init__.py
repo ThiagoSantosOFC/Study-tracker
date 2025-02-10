@@ -5,7 +5,8 @@ from exceptions.exceptions import (
     SessionNotFoundException,
     TaskNotFoundException,
     NotificationNotFoundException,
-    RoleNotFoundException
+    RoleNotFoundException,
+    UnauthorizedAccessError
 )
 
 __all__ = [
@@ -15,5 +16,6 @@ __all__ = [
     "SessionNotFoundException",
     "TaskNotFoundException",
     "NotificationNotFoundException",
-    "RoleNotFoundException"
+    "RoleNotFoundException",
+    "UnauthorizedAccessError"
 ]
