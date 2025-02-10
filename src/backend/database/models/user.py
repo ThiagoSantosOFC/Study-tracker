@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from database.connection import Base
 from datetime import datetime
@@ -11,11 +11,11 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     profile_description = Column(String, nullable=True)
-    role = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
     is_active = Column(Boolean, default=True)
-    
+    role_id = Column(Integer, ForeignKey('roles.id'), nullable=True)
+    role = relationship("Role", back_populates="users")
     sessions = relationship("Session", back_populates="created_by_user")
     user_sessions = relationship("UserSession", back_populates="user")
     tasks = relationship("Task", back_populates="created_by")

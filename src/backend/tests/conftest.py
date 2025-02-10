@@ -50,3 +50,8 @@ def task_service(db_session):
 def notification_service(db_session):
     from services.notification_service import NotificationService
     return NotificationService(db_session)
+
+@pytest.fixture
+def role_service(db_session):
+    from services.role_service import RoleService
+    return RoleService(db_session)
